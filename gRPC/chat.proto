@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package asynch;
+
+message Mensaje {
+	uint32 id = 1;
+	Cliente emisor = 2;
+	Cliente receptor = 3;
+    string valor = 4;
+	string timestamp = 5;
+}
+
+message Cliente {
+	uint32 id = 1;
+    string nombre = 2;
+}
+
+message MensajeRecibido {
+	uint32 error = 1;
+	string errorMensaje = 2;
+}
+
+message Registro {
+    string nombre = 1;
+}
+
+message RegistroRespuesta {
+	uint32 error = 1;
+	string errorMensaje = 2;
+	Cliente cliente = 3;
+}
+
+message MensajeVacio { }
+
+service ChatServer {
+    rpc ListaClientes(MensajeVacio) returns (stream Cliente);
+    rpc ObtenerMensajes(Cliente) returns (stream Mensaje);
+    rpc EnviarMensaje(Mensaje) returns (MensajeRecibido);
+    rpc Chat(Cliente) returns (stream Mensaje);
+    rpc Login(Registro) returns (RegistroRespuesta);
+}

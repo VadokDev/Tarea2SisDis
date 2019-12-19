@@ -1,0 +1,108 @@
+[04-Nov-2019 07:41:54] (0) El Waldo - Broadcast: Hola
+[04-Nov-2019 07:44:52] (0) El wALdO - Broadcast: hola
+[04-Nov-2019 07:45:22] (1) El wALdO - El wALdO: Hola
+[04-Nov-2019 07:49:22] (0) 123 - Broadcast: asd
+[04-Nov-2019 07:49:25] (1) 123 - 123: asdsaa
+[04-Nov-2019 07:50:56] (2) asd - 123: asd
+[04-Nov-2019 07:51:02] (3) asd - asd: kik
+[04-Nov-2019 07:52:44] (0) asdjks - Broadcast: asidsdf
+[04-Nov-2019 07:53:53] (1) asdrgrg - Broadcast: asd
+[04-Nov-2019 07:53:55] (2) asdrgrg - asdjks: oieo
+[04-Nov-2019 07:54:51] (3) kkkkkr - Broadcast: hHOOOllaaa
+[04-Nov-2019 07:55:49] (4) cliente 2 - Broadcast: HOLA
+[04-Nov-2019 07:56:07] (5) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:02] (6) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:02] (7) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:03] (8) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:03] (9) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:04] (10) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:04] (11) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:09] (12) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:09] (13) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:09] (14) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:10] (15) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:10] (16) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:10] (17) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:11] (18) cliente 3 - cliente 4: sdfsdfsdf
+[04-Nov-2019 07:57:17] (19) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:18] (20) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:18] (21) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:18] (22) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:18] (23) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:19] (24) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:19] (25) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:20] (26) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:21] (27) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:21] (28) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:22] (29) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:22] (30) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:23] (31) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:24] (32) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:24] (33) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:57:25] (34) cliente 3 - Broadcast: sdfsdfsdf
+[04-Nov-2019 07:59:31] (35) Cliente 6 - kkkkkr: asd
+[04-Nov-2019 07:59:35] (36) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:37] (37) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:38] (38) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:38] (39) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:39] (40) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:39] (41) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:40] (42) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:40] (43) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:40] (44) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:41] (45) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 07:59:42] (46) Cliente 6 - Broadcast: kgf
+[04-Nov-2019 16:09:26] (0) sedf - Broadcast: asd
+[04-Nov-2019 16:09:26] (1) sedf - Broadcast: asd
+[04-Nov-2019 16:21:11] (0) sdf - Broadcast: asd
+[04-Nov-2019 16:21:13] (1) sdf - Broadcast: asd
+[04-Nov-2019 16:21:14] (2) sdf - Broadcast: asd
+[04-Nov-2019 16:21:14] (3) sdf - Broadcast: asd
+[04-Nov-2019 16:21:14] (4) sdf - Broadcast: asd
+[04-Nov-2019 16:21:14] (5) sdf - Broadcast: asd
+[04-Nov-2019 16:21:15] (6) sdf - Broadcast: asd
+[04-Nov-2019 16:21:15] (7) sdf - Broadcast: asd
+[04-Nov-2019 16:21:15] (8) sdf - Broadcast: asd
+[04-Nov-2019 16:21:16] (9) sdf - Broadcast: asd
+[04-Nov-2019 16:21:16] (10) sdf - Broadcast: asd
+[04-Nov-2019 16:25:26] (11) sdf - Broadcast: asd
+[04-Nov-2019 16:25:26] (12) sdf - Broadcast: asd
+[04-Nov-2019 16:25:26] (13) sdf - Broadcast: asd
+[04-Nov-2019 16:25:26] (14) sdf - Broadcast: asd
+[04-Nov-2019 16:25:27] (15) sdf - Broadcast: asd
+[04-Nov-2019 16:25:27] (16) sdf - Broadcast: asd
+[04-Nov-2019 16:26:08] (17) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:10] (18) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:10] (19) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:10] (20) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:11] (21) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:11] (22) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (23) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (24) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (25) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (26) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (27) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (28) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:12] (29) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:13] (30) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:13] (31) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:16] (32) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:16] (33) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:16] (34) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:16] (35) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:17] (36) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:17] (37) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:17] (38) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:17] (39) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:17] (40) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:18] (41) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:18] (42) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:18] (43) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:18] (44) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:19] (45) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:19] (46) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:19] (47) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:19] (48) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:20] (49) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:26:20] (50) asdfsdf - Broadcast: hola
+[04-Nov-2019 16:36:42] (51) lksdfgklkldfg - lksdfgklkldfg: lksdfjksdfjksdfjk
