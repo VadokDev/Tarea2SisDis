@@ -1,20 +1,53 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys
-import grpc
+import pika
 import time
-
-import chat_pb2 as chat
-import chat_pb2_grpc as rpc
 
 from concurrent import futures
 
-class ChatServer(rpc.ChatServerServicer):
+def find_nth(haystack, needle, n):
+	start = haystack.find(needle)
+	while start >= 0 and n > 1:
+		start = haystack.find(needle, start+len(needle))
+		n -= 1
+	return start
 
-	def __init__(self):
-		self.ultimoMensaje = 0 # id mensajes
-		self.chats = [ ] # Chats
-		self.AgregarCliente("Broadcast") # Mensaje a todos
-	
+class ChatServer():
+
+	def __init__(self, host, puerto):
+		self.conn = pika.BlockingConnection(pika.ConnectionParameters(host, puerto))
+		print("[Info] Iniciando servidor en ", host + ':' + str(puerto))
+
+		self.channel = self.conn.channel()
+		self.channel.exchange_declare(exchange='login', exchange_type='direct')
+		self.channel.exchange_declare(exchange='chat', exchange_type='direct')
+
+		result = self.channel.queue_declare(queue='', exclusive=True)
+		queue_name = result.method.queue
+		self.channel.queue_bind(exchange='login', queue=queue_name, routing_key='login')
+
+		self.channel.basic_consume(queue=queue_name, on_message_callback=self.callback, auto_ack=True)
+		self.channel.start_consuming()
+
+		#self.channel.exchange_declare(exchange='broadcasting', exchange_type='fanout')
+
+		#self.ultimoMensaje = 0 # id mensajes
+		#self.chats = [ ] # Chats
+		#self.AgregarCliente("Broadcast") # Mensaje a todos
+
+
+	def callback(self, ch, method, properties, body):
+		body = str(body.decode('UTF-8'))
+		print(" [x] %r:%r" % (method.routing_key, body))
+		key = body[find_nth(body, ",", 1) + 1::].replace(",", "", 1)
+		print(key)
+		time.sleep(5)
+		self.channel.basic_publish(exchange='chat', routing_key=str(key), body='logeXXXXando')
+		print("Mensaje enviado")
+
+	"""
 	def AgregarCliente(self, nombre):
 		cliente = chat.Cliente()
 		cliente.nombre = nombre
@@ -90,7 +123,7 @@ class ChatServer(rpc.ChatServerServicer):
 			self.NuevoMensaje(0, r.emisor.id, r)
 			self.NuevoMensaje(1, r.receptor.id, r)
 
-			# """"Broadcasting"""" 
+			# "Broadcasting" 
 			if r.receptor.id == 0:
 				for cliente, _ in self.chats:
 					self.NuevoMensaje(1, cliente.id, r)
@@ -107,23 +140,12 @@ class ChatServer(rpc.ChatServerServicer):
 			self.ultimoMensaje += 1
 
 		self.chats[cliente][1][tipo].append(mensaje)
-
+	"""
 
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
 		print("[Error] Al ejecutar el programa se debe indicar el hostname y puerto de escucha.")
-		print("[Info] Ejemplo de ejecución: python server.py localhost 12345.")
+		print("[Info] Ejemplo de ejecución: python server.py localhost 5672.")
 		exit(0)
 
-	host = sys.argv[1]
-	puerto = int(sys.argv[2])
-
-	server = grpc.server(futures.ThreadPoolExecutor())
-	rpc.add_ChatServerServicer_to_server(ChatServer(), server)
-	
-	print("[Info] Servidor inicializado en la dirección:", host + ":" + str(puerto))
-
-	server.add_insecure_port(host + ":" + str(puerto))
-	server.start()
-	while True:
-		time.sleep(1800)
+	ChatServer(sys.argv[1], int(sys.argv[2]))
