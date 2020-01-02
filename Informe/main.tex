@@ -101,7 +101,17 @@ A continuación, se detalla como los 2 programas realizan las acciones del siste
 
 \section{Recomendación Técnica}
 
+Luego de realizar ambas implementaciones, la recomendación sería hacer uso de RabbitMQ, conforme a lo siguiente:
 
+\begin{itemize}
+	\item Al no ser necesario mantener una conexión directa entre el cliente y el programa que hace de servidor (como en gRPC), el cliente no tiene que ser consciente de que hay un servidor al que está directamente conectado respondiendo sus solicitudes, esto facilita cosas como replicar el programa de servidor varias veces (lo que para RabbitMQ significaría conectar más workers) y así poder distribuir la carga de las solicitudes de los clientes.
+	\item Ambas implementaciones tienen la problemática de que deben almacenar muchos datos en memoria, esto podría subsanarse con una base de datos en una implementación más profesional, con el fin de evitar restricciones de memoria, ahora bien, con RabbitMQ sería más sencillo mantener los datos de conversaciones distribuidos a lo largo de los distintos \textit{workers} (sin una bd adicional).
+	\item RabbitMQ, al ser un servicio aparte, facilita cosas como hacer un cluster, o distribuirlo geográficamente, con gRPC en cambio, sería necesario implementar esta lógica de manera manual, lo que exigiría unir la lógica de sistema distribuído con la del programa, RabbirMQ permite abstraerse de esto.
+	\item Ambas tecnologías permiten la comunicación entre programas en distintos lenguajes, no obstante, gRPC no ofrece la posibilidad de abstraerse de los tipos de datos de cada lenguaje (pudiendo incluso llegar a un lenguaje no soportado por gRPC), en cambio para RabbitMQ, basta con enviar mensajes de texto para traspasar la información, utilizando alguna notación como JSON\cite{RFC8259} para comunicar 2 programas en lenguajes no soportados por gRPC
+	\item RabbitMQ trae una serie de herramientas que permiten manejarlo de manera independiente, gRPC requeriría el desarrollo de herramientas propias orientadas al sistema que se está desarrollando con él.
+\end{itemize}
+
+No obstante, todas estas recomendaciones van de la mano de la implementación que en este informe se realizó, podrían existir mejores implementaciones donde gRPC sería una mejor alternativa, o escenarios donde esta implementación no sería adecuada para ninguna de las tecnologías, es siempre importante realizar un análisis de la situación a la que se va a enfrentar el sistema a desarrollar de modo tal de poder escoger las tecnologías a usar de la manera más adecuada.
 
 \begin{thebibliography}{99}
 \raggedright

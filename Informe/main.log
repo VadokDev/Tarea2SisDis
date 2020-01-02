@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (MiKTeX 2.9.7140 64-bit) (preloaded format=xelatex 2019.9.26)  2 JAN 2020 18:11
+This is XeTeX, Version 3.14159265-2.6-0.999991 (MiKTeX 2.9.7140 64-bit) (preloaded format=xelatex 2019.9.26)  2 JAN 2020 19:52
 entering extended mode
 **D:/Desarrollo/Distribuidos/Tarea2/Informe/main.tex
 (D:/Desarrollo/Distribuidos/Tarea2/Informe/main.tex
@@ -580,23 +580,23 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 52.
  [1
 
-] [2]
+] [2] [3]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 113.
+(Font)              <10.95> on input line 123.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 113.
+(Font)              <8> on input line 123.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 113.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 119.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 119.
+(Font)              <6> on input line 123.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 129.
+ [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 129.
  (main.aux
 LaTeX Info: Redefining \. on input line 25.
 LaTeX Info: Redefining \% on input line 25.
 )
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 119.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 119.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 119.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 129.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 129.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 129.
  ) 
 Here is how much of TeX's memory you used:
  21406 strings out of 427669
@@ -607,4 +607,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  43i,4n,79p,683b,429s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on main.pdf (3 pages).
+Output written on main.pdf (4 pages).
