@@ -1,0 +1,119 @@
+\documentclass[11pt, letter]{article}
+\usepackage{fullpage} % changes the margin
+
+\usepackage[toc,page]{appendix}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{bookmark}
+\usepackage{graphicx} 
+\usepackage{wrapfig}
+\usepackage{float}
+
+\usepackage{fontspec}
+\setmainfont{Calibri}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\urlstyle{same}
+
+\graphicspath{ {./} }
+%\titleformat*{\subsection}{\Large\bfseries}
+\makeatletter
+\setlength\parindent{0pt}
+
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\bfseries}}
+
+\begin{document}
+
+\begin{center}
+	\huge{Sistema de Mensajería Distribuído con gRPC y RabbitMQ}\\
+	\LARGE{Informe Comparativo}\\
+	\vspace{3mm}
+	\large{Gonzalo Fernández C. \hspace{6mm} Sebastian Godinez S. M.}
+
+\end{center}
+
+\section{Introducción}
+
+El presente documento explica las ventajas y desventajas encontradas luego de desarrollar un sistema de mensajería simple a través de 2 tecnologías distintas con el fin de compararlas, la primera es una implementación a través de llamadas a procedimientos remotos (RPC) mediante un servidor gRPC\cite{GRPC}, la segunda en cambio, es una implementación que se sirve de un servicio de colas de mensajería RabbitMQ\cite{RabbitMQ}, generando en base a los resultados una completa recomendación técnica.
+
+\section{Implementación en gRPC}
+
+La implementación del sistema de chat a través de gRPC se compone de 2 programas: un cliente y un servidor, los cuales se detallan a continuación:
+
+\subsection{Servidor:}
+\begin{itemize}
+	\item Al ejecutarse, inicia un servidor gRPC en la dirección entregada por consola, una vez que el servidor de escucha está listo, crea una estructura de datos que estará encargada de almacenar todas las conexiones gRPC de los clientes, así como también, los mensajes que envían y reciben.
+	\item Una vez inicializado, agrega un cliente \textit{Broadcast}, el cual, si alguien le envía un mensaje, el servidor se lo reenviará a todos.
+	\item Cuando un cliente intenta logear, busca si su usuario se encuentra conectado para determinar si puede o no acceder, en caso de que no esté, le asigna una id única y procede a atender el resto de solicitudes.
+	\item Cuando recibe un mensaje, le asigna un id único y luego revisa revisa a qué usuario lo debe entregar, para así agregarlo a lista de mensajes enviados del emisor y a la lista de mensajes recibidos de ese cliente, el cual está permanentemente escuchando por nuevos mensajes, en caso de ser la id del usuario \textit{Broadcast}, el servidor repite este proceso para todos los usuarios. Luego, guarda en un archivo de texto \texttt{log.txt} cada mensaje del chat.
+	\item Para las otras solicitudes, el servidor revisa en la estructura de datos donde guarda todo los datos que debe entregar y la retorna al cliente, a través de \textit{Remote Procedure Calls}.
+\end{itemize}
+
+\subsection{Cliente:}
+\begin{itemize}
+	\item Al ejecutarse, el cliente se conecta con el servidor en la dirección ingresada por la consola, luego cuando la conexión es establecida, procede a insertar un nombre de usuario con el fin de logear.
+	\item Una vez logeado, el cliente guarda su id único y entonces ya está habilitado para hacer solicitueds al servidor
+	\item Para enviar un mensaje, necesita el id del cliente a quién le escribirá, ésto se logra solicitando la lista de clientes al servidor con el comando \texttt{clientes}, el cual retorna sus ids y nombres y luego con estos datos el cliente sabe a quién dirigir su mensaje con el comando \texttt{msg [id] [mensaje]}
+	\item El cliente siempre está revisando una lista de mensajes en paralelo, cada vez que hay un mensaje nuevo, se muestra en pantalla sin interrumpir lo que esté haciendo
+	\item Cuando el cliente envía un mensaje, no debe esperar a que el servidor le responda, pues es asíncrono.
+	\item Para ver el historial de mensajes, debe ingresar el comando \texttt{historial}
+	\item Al ingresar \texttt{salir}, el cliente se desconecta.
+\end{itemize}
+
+\section{Implementación en RabbitMQ}
+
+La implementación con RabbitMQ también se compone de 2 programas, un cliente y un servidor, donde este último no es un servidor como tal si no más bien un \textit{worker} encargado de extraer los mensajes de los clientes para así procesar sus solicitudes.
+
+Por el lado de RabbitMQ, la comunicación se lleva a cabo a través de mensajes en formato JSON\cite{RFC8259} por medio de 3 \textit{exchanges}:
+
+\begin{itemize}
+	\item \textbf{login:} Cola encargada de manejar la parte de logeo de cada cliente
+
+	\item \textbf{chat:} Cola encargada de manejar los mensajes de chat del sistema
+
+	\item \textbf{services:} Cola encargada de los otros servicios del sistema (lista de clientes, historial)
+\end{itemize}
+
+A continuación, se detalla como los 2 programas realizan las acciones del sistema de chat (centrándose principalmente en la parte de RabbitMQ, dado que el resto del comportamiento es igual a la implementación anterior):
+
+\subsection{Servidor:}
+
+\begin{itemize}
+	\item Al iniciar, se construye la misma estructura de datos de la implementación anterior, no obstante, esta vez en vez de almacenar una conexión gRPC por cliente, se almacena una id única de cada uno, la cual será usada para escribirle a un cliente en particular usando su it como \textit{routing\_key}, usando el \textit{exchange} que corresponda.
+	\item Una vez inicializado, se crean 3 hébras, cada una establece una nueva conexión con RabbitMQ, declara el \textit{exchange} correspondiente, crea una cola y se la asocia para así, proceder a mantenerse consumiendo los mensajes que lleguen a esa cola. Una hebra está encargada de manejar el login de los usuarios, otra de manejar el chat y la última de manejarlos otros servicios del sistema de chat.
+	\item El resto se comporta del mismo modo que la implementación anterior, con la diferencia de que la comunicación se materializa a través de colas en el \textit{exchange} correspondiente y los mensajes son derivados a su receptos a través del uso de su \textit{routing\_key}, cuya generación es responsabilidad del cliente.
+\end{itemize}
+
+\subsection{Cliente:}
+
+\begin{itemize}
+	\item Al iniciar, se conecta con el servidor RabbitMQ, luego genera 2 canales: uno para logear y otro para usar los servicios aparte del chat, declara en ellos los exchanges correspondientes y para entonces, ya se considera ``conectado con el servidor'' (aunque en realidad sólo sea una conexión con RabbitMQ, pues no hay comunicación directa con el otro programa).
+	\item Al momento de logear, dado que la única forma de que el programa que actúa de ``servidor'' pueda comunicarse directamente con el cliente (o bien, escribir un mensaje en la cola que va a ser leído por un cliente en particular y no el primero en leer de la cola) es a través de una \textit{routing\_key} en el \textit{exchange} correspondiente, el cliente genera una id única combinando el nombre con el que quiere logear y un identificador único universal UUID v4\cite{RFC4122}, y procede a usarla como \textit{routing\_key} para enviar un mensaje de login utilizando el formato JSON\cite{RFC8259}.
+	\item Una vez que envía el mensaje de login, se mantiene esperando hasta que llegue un mensaje a la cola que asoció al \textit{exchange} de login, donde determinará si está o no correctamente logeado.
+	\item Terminado el proceso de login, el cliente puede enviar mensajes al \textit{exchange} de chats (de manera asíncrona) o al de servicios, siguiendo el mismo flujo que la implementación anterior, con la salvedad de que cada vez que manda un mensaje a un \textit{exchange}, el cliente ingresa como \textit{routing\_key} la id única generada al momento de logear, esta luego es usada por el servidor para distribuír sus mensajes de chat o bien, para responderle al cliente por algún mensaje como \texttt{historial} o \texttt{clientes}.
+\end{itemize}
+
+\section{Recomendación Técnica}
+
+
+
+\begin{thebibliography}{99}
+\raggedright
+
+\bibitem{GRPC} Cloud Native Computing Foundation. (2019). \textit{"gRPC -- A high performance, open-source universal RPC framework"}. Extraído de https://grpc.io/
+
+\bibitem{RabbitMQ} Pivotal. (2019). \textit{"Messaging that just works -- RabbitMQ"}. Extraído de https://www.rabbitmq.com/
+
+\bibitem{RFC4122} Leach, P., Mealling, M. \& Salz, R. (2005). \textit{``A Universally Unique IDentifier (UUID) URN Namespace''}, RFC 4122, \url{https://tools.ietf.org/html/rfc4122}.
+
+\bibitem{RFC8259} T. Bray, Ed. (2017). \textit{``The JavaScript Object Notation (JSON) Data Interchange Format''}, RFC 8259, \url{https://tools.ietf.org/html/rfc8259}.
+
+\end{thebibliography}
+
+\end{document}

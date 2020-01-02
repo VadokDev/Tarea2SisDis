@@ -38,7 +38,6 @@ class ChatServer(rpc.ChatServerServicer):
 	def ClienteRegistrado(self, nombre):
 		for cliente, _ in self.chats:
 			if cliente.nombre == nombre:
-				registrado = 1
 				return True
 		return False
 

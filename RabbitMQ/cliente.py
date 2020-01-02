@@ -102,7 +102,6 @@ class Cliente:
 				enviar["timestamp"] = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
 				self.channelChat.basic_publish(exchange='chat', routing_key="chat", body=json.dumps(enviar))
 			elif data[0] == "clientes":
-				# No logré hacer asíncrona esta parte :c
 				enviar["accion"] = "1"
 				self.channelServices.basic_publish(exchange='services', routing_key="services", body=json.dumps(enviar))
 				
