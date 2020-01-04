@@ -40,7 +40,7 @@
 
 \section{Introducción}
 
-El presente documento explica las ventajas y desventajas encontradas luego de desarrollar un sistema de mensajería simple a través de 2 tecnologías distintas con el fin de compararlas, la primera es una implementación a través de llamadas a procedimientos remotos (RPC) mediante un servidor gRPC\cite{GRPC}, la segunda en cambio, es una implementación que se sirve de un servicio de colas de mensajería RabbitMQ\cite{RabbitMQ}, generando en base a los resultados una completa recomendación técnica.
+El presente documento explica las ventajas y desventajas encontradas luego de desarrollar un sistema de mensajería simple a través de 2 tecnologías distintas con el fin de compararlas, la primera es una implementación a través de llamadas a procedimientos remotos (RPC) mediante un servidor gRPC\cite{GRPC}, la segunda en cambio, es una implementación que se sirve de un servicio de colas de mensajería RabbitMQ\cite{RabbitMQ}, generando en base a los resultados una completa recomendación técnica. La implementación tiene 2 modos de trabajo, uno en que los programas actúan de manera autónoma (0) y otro en que requieren un input manual del usuario (1), este último es el modo que se habla en este informe
 
 \section{Implementación en gRPC}
 
@@ -58,7 +58,7 @@ La implementación del sistema de chat a través de gRPC se compone de 2 program
 \subsection{Cliente:}
 \begin{itemize}
 	\item Al ejecutarse, el cliente se conecta con el servidor en la dirección ingresada por la consola, luego cuando la conexión es establecida, procede a insertar un nombre de usuario con el fin de logear.
-	\item Una vez logeado, el cliente guarda su id único y entonces ya está habilitado para hacer solicitueds al servidor
+	\item Una vez logeado, el cliente guarda su id único y entonces ya está habilitado para hacer solicitudes al servidor
 	\item Para enviar un mensaje, necesita el id del cliente a quién le escribirá, ésto se logra solicitando la lista de clientes al servidor con el comando \texttt{clientes}, el cual retorna sus ids y nombres y luego con estos datos el cliente sabe a quién dirigir su mensaje con el comando \texttt{msg [id] [mensaje]}
 	\item El cliente siempre está revisando una lista de mensajes en paralelo, cada vez que hay un mensaje nuevo, se muestra en pantalla sin interrumpir lo que esté haciendo
 	\item Cuando el cliente envía un mensaje, no debe esperar a que el servidor le responda, pues es asíncrono.
@@ -85,18 +85,18 @@ A continuación, se detalla como los 2 programas realizan las acciones del siste
 \subsection{Servidor:}
 
 \begin{itemize}
-	\item Al iniciar, se construye la misma estructura de datos de la implementación anterior, no obstante, esta vez en vez de almacenar una conexión gRPC por cliente, se almacena una id única de cada uno, la cual será usada para escribirle a un cliente en particular usando su it como \textit{routing\_key}, usando el \textit{exchange} que corresponda.
-	\item Una vez inicializado, se crean 3 hébras, cada una establece una nueva conexión con RabbitMQ, declara el \textit{exchange} correspondiente, crea una cola y se la asocia para así, proceder a mantenerse consumiendo los mensajes que lleguen a esa cola. Una hebra está encargada de manejar el login de los usuarios, otra de manejar el chat y la última de manejarlos otros servicios del sistema de chat.
-	\item El resto se comporta del mismo modo que la implementación anterior, con la diferencia de que la comunicación se materializa a través de colas en el \textit{exchange} correspondiente y los mensajes son derivados a su receptos a través del uso de su \textit{routing\_key}, cuya generación es responsabilidad del cliente.
+	\item Al iniciar, se construye la misma estructura de datos de la implementación anterior, no obstante, esta vez en vez de almacenar una conexión gRPC por cliente, se almacena una id única de cada uno, la cual será usada para escribirle a un cliente en particular usando su id como \textit{routing\_key}, usando el \textit{exchange} que corresponda.
+	\item Una vez inicializado, se crean 3 hebras, cada una establece una nueva conexión con RabbitMQ, declara el \textit{exchange} correspondiente, crea una cola y se la asocia para así, proceder a mantenerse consumiendo los mensajes que lleguen a esa cola. Una hebra está encargada de manejar el login de los usuarios, otra de manejar el chat y la última de manejarlos otros servicios del sistema de chat.
+	\item El resto se comporta del mismo modo que la implementación anterior, con la diferencia de que la comunicación se materializa a través de colas en el \textit{exchange} correspondiente y los mensajes son derivados a su receptor a través del uso de su \textit{routing\_key}, cuya generación es responsabilidad del cliente.
 \end{itemize}
 
 \subsection{Cliente:}
 
 \begin{itemize}
-	\item Al iniciar, se conecta con el servidor RabbitMQ, luego genera 2 canales: uno para logear y otro para usar los servicios aparte del chat, declara en ellos los exchanges correspondientes y para entonces, ya se considera ``conectado con el servidor'' (aunque en realidad sólo sea una conexión con RabbitMQ, pues no hay comunicación directa con el otro programa).
+	\item Al iniciar, se conecta con el servidor RabbitMQ, luego genera 2 canales: uno para logear y otro para usar los servicios aparte del chat, declara en ellos los \textit{exchanges} correspondientes y para entonces, ya se considera ``conectado con el servidor'' (aunque en realidad sólo sea una conexión con RabbitMQ, pues no hay comunicación directa con el otro programa).
 	\item Al momento de logear, dado que la única forma de que el programa que actúa de ``servidor'' pueda comunicarse directamente con el cliente (o bien, escribir un mensaje en la cola que va a ser leído por un cliente en particular y no el primero en leer de la cola) es a través de una \textit{routing\_key} en el \textit{exchange} correspondiente, el cliente genera una id única combinando el nombre con el que quiere logear y un identificador único universal UUID v4\cite{RFC4122}, y procede a usarla como \textit{routing\_key} para enviar un mensaje de login utilizando el formato JSON\cite{RFC8259}.
 	\item Una vez que envía el mensaje de login, se mantiene esperando hasta que llegue un mensaje a la cola que asoció al \textit{exchange} de login, donde determinará si está o no correctamente logeado.
-	\item Terminado el proceso de login, el cliente puede enviar mensajes al \textit{exchange} de chats (de manera asíncrona) o al de servicios, siguiendo el mismo flujo que la implementación anterior, con la salvedad de que cada vez que manda un mensaje a un \textit{exchange}, el cliente ingresa como \textit{routing\_key} la id única generada al momento de logear, esta luego es usada por el servidor para distribuír sus mensajes de chat o bien, para responderle al cliente por algún mensaje como \texttt{historial} o \texttt{clientes}.
+	\item Terminado el proceso de login, el cliente puede enviar mensajes al \textit{exchange} de chats (de manera asíncrona) o al de servicios, siguiendo el mismo flujo que la implementación anterior, con la salvedad de que cada vez que manda un mensaje a un \textit{exchange}, el cliente ingresa como \textit{routing\_key} la id única generada al momento de logear, esta luego es usada por el servidor para distribuir sus mensajes de chat o bien, para responderle al cliente por algún mensaje como \texttt{historial} o \texttt{clientes}.
 \end{itemize}
 
 \section{Recomendación Técnica}
@@ -104,9 +104,9 @@ A continuación, se detalla como los 2 programas realizan las acciones del siste
 Luego de realizar ambas implementaciones, la recomendación sería hacer uso de RabbitMQ, conforme a lo siguiente:
 
 \begin{itemize}
-	\item Al no ser necesario mantener una conexión directa entre el cliente y el programa que hace de servidor (como en gRPC), el cliente no tiene que ser consciente de que hay un servidor al que está directamente conectado respondiendo sus solicitudes, esto facilita cosas como replicar el programa de servidor varias veces (lo que para RabbitMQ significaría conectar más workers) y así poder distribuir la carga de las solicitudes de los clientes.
+	\item Al no ser necesario mantener una conexión directa entre el cliente y el programa que hace de servidor (como en gRPC), el cliente no tiene que ser consciente de que hay un servidor al que está directamente conectado respondiendo sus solicitudes, esto facilita cosas como replicar el programa de servidor varias veces (lo que para RabbitMQ significaría conectar más \textit{workers}) y así poder distribuir la carga de las solicitudes de los clientes.
 	\item Ambas implementaciones tienen la problemática de que deben almacenar muchos datos en memoria, esto podría subsanarse con una base de datos en una implementación más profesional, con el fin de evitar restricciones de memoria, ahora bien, con RabbitMQ sería más sencillo mantener los datos de conversaciones distribuidos a lo largo de los distintos \textit{workers} (sin una bd adicional).
-	\item RabbitMQ, al ser un servicio aparte, facilita cosas como hacer un cluster, o distribuirlo geográficamente, con gRPC en cambio, sería necesario implementar esta lógica de manera manual, lo que exigiría unir la lógica de sistema distribuído con la del programa, RabbirMQ permite abstraerse de esto.
+	\item RabbitMQ, al ser un servicio aparte, facilita cosas como hacer un cluster, o distribuirlo geográficamente, con gRPC en cambio, sería necesario implementar esta lógica de manera manual, lo que exigiría unir la lógica de sistema distribuido con la del programa, RabbirMQ permite abstraerse de esto.
 	\item Ambas tecnologías permiten la comunicación entre programas en distintos lenguajes, no obstante, gRPC no ofrece la posibilidad de abstraerse de los tipos de datos de cada lenguaje (pudiendo incluso llegar a un lenguaje no soportado por gRPC), en cambio para RabbitMQ, basta con enviar mensajes de texto para traspasar la información, utilizando alguna notación como JSON\cite{RFC8259} para comunicar 2 programas en lenguajes no soportados por gRPC
 	\item RabbitMQ trae una serie de herramientas que permiten manejarlo de manera independiente, gRPC requeriría el desarrollo de herramientas propias orientadas al sistema que se está desarrollando con él.
 \end{itemize}

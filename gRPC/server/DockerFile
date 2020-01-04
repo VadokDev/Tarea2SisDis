@@ -1,0 +1,10 @@
+FROM python:3.7
+
+EXPOSE 12345
+WORKDIR /usr/bin/app
+
+RUN pip install grpcio
+RUN pip install grpcio-tools
+
+COPY . /usr/bin/app
+CMD ["python", "server.py", "0.0.0.0", "12345"]

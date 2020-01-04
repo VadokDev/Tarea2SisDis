@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  server:
+    build: 
+      context: ./server
+      dockerfile: DockerFile
+  c1:
+    build: 
+      context: ./cliente
+      dockerfile: DockerFile
+    container_name: "c1"
+    depends_on:
+      [server]
+  c2:
+    build: 
+      context: ./cliente2
+      dockerfile: DockerFile
+    container_name: "c2"
+    depends_on:
+      [server]
+

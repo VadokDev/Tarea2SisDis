@@ -29,7 +29,7 @@ class ChatServer():
 			continue
 
 	def handleServices(self):
-		self.connServices = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, port=self.puerto, heartbeat=0))
+		self.connServices = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, heartbeat=0))
 		self.channelServices = self.connServices.channel()
 		self.colaServices = self.channelServices.queue_declare(queue='', exclusive=True).method.queue
 		self.channelServices.exchange_declare(exchange='services', exchange_type='direct')
@@ -39,7 +39,7 @@ class ChatServer():
 		self.channelServices.start_consuming()
 
 	def handleChats(self):
-		self.connChat = pika.BlockingConnection(pika.ConnectionParameters(self.host, self.puerto))
+		self.connChat = pika.BlockingConnection(pika.ConnectionParameters(self.host, heartbeat=0))
 		self.channelChat = self.connChat.channel()
 		self.colaChat = self.channelChat.queue_declare(queue='', exclusive=True).method.queue
 		self.channelChat.exchange_declare(exchange='chat', exchange_type='direct')
@@ -49,7 +49,7 @@ class ChatServer():
 		self.channelChat.start_consuming()
 
 	def handleLogin(self):
-		self.connLogin = pika.BlockingConnection(pika.ConnectionParameters(self.host, self.puerto))
+		self.connLogin = pika.BlockingConnection(pika.ConnectionParameters(self.host, heartbeat=0))
 		self.channelLogin = self.connLogin.channel()
 		self.colaLogin = self.channelLogin.queue_declare(queue='', exclusive=True).method.queue
 		self.channelLogin.exchange_declare(exchange='login', exchange_type='direct')
